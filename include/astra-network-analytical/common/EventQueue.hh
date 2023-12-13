@@ -18,14 +18,14 @@ class EventQueue {
   /**
    * Constructor.
    */
-  EventQueue() noexcept;
+  EventQueue();
 
   /**
    * Get current event time of the event queue.
    *
    * @return current event time
    */
-  [[nodiscard]] EventTime get_current_time() const noexcept;
+  [[nodiscard]] EventTime get_current_time() const;
 
   /**
    * Check all registered events are invoked.
@@ -33,14 +33,14 @@ class EventQueue {
    *
    * @return true if the event queue is empty, false otherwise
    */
-  [[nodiscard]] bool finished() const noexcept;
+  [[nodiscard]] bool finished() const;
 
   /**
    * Proceed the event queue.
    * i.e., first update the current event time to the next registered event time,
    * and then invoke all events registered at the current updated event time.
    */
-  void proceed() noexcept;
+  void proceed();
 
   /**
    * Schedule an event with a given event time.
@@ -52,7 +52,7 @@ class EventQueue {
   void schedule_event(
       EventTime event_time,
       Callback callback,
-      CallbackArg callback_arg) noexcept;
+      CallbackArg callback_arg);
 
  private:
   /// current time of the event queue

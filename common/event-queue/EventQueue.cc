@@ -8,21 +8,21 @@ LICENSE file in the root directory of this source tree.
 
 using namespace NetworkAnalytical;
 
-EventQueue::EventQueue() noexcept : current_time(0) {
+EventQueue::EventQueue() : current_time(0) {
   // create empty event queue
   event_queue = std::list<EventList>();
 }
 
-EventTime EventQueue::get_current_time() const noexcept {
+EventTime EventQueue::get_current_time() const {
   return current_time;
 }
 
-bool EventQueue::finished() const noexcept {
+bool EventQueue::finished() const {
   // check whether event queue is empty
   return event_queue.empty();
 }
 
-void EventQueue::proceed() noexcept {
+void EventQueue::proceed() {
   // to proceed, next event should exist
   assert(!finished());
 
@@ -43,7 +43,7 @@ void EventQueue::proceed() noexcept {
 void EventQueue::schedule_event(
     const EventTime event_time,
     const Callback callback,
-    const CallbackArg callback_arg) noexcept {
+    const CallbackArg callback_arg) {
   // time should be at least larger than current time
   assert(event_time >= current_time);
 

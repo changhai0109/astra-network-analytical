@@ -21,14 +21,14 @@ class EventList {
    *
    * @param event_time event time of the event list
    */
-  explicit EventList(EventTime event_time) noexcept;
+  explicit EventList(EventTime event_time);
 
   /**
    * Get the registered event time.
    *
    * @return event time
    */
-  [[nodiscard]] EventTime get_event_time() const noexcept;
+  [[nodiscard]] EventTime get_event_time() const;
 
   /**
    * Register an event into the event list.
@@ -36,12 +36,12 @@ class EventList {
    * @param callback callback function pointer
    * @param callback_arg argument of the callback function
    */
-  void add_event(Callback callback, CallbackArg callback_arg) noexcept;
+  void add_event(Callback callback, CallbackArg callback_arg);
 
   /**
    * Invoke all events in the event list.
    */
-  void invoke_events() noexcept;
+  void invoke_events();
 
  private:
   /// event time of the event list

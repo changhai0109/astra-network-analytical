@@ -8,12 +8,12 @@ LICENSE file in the root directory of this source tree.
 
 using namespace NetworkAnalytical;
 
-Event::Event(const Callback callback, const CallbackArg callback_arg) noexcept
+Event::Event(const Callback callback, const CallbackArg callback_arg)
     : callback(callback), callback_arg(callback_arg) {
   assert(callback != nullptr);
 }
 
-void Event::invoke_event() noexcept {
+void Event::invoke_event() {
   // check the validity of the event
   assert(callback != nullptr);
 
@@ -21,7 +21,7 @@ void Event::invoke_event() noexcept {
   (*callback)(callback_arg);
 }
 
-std::pair<Callback, CallbackArg> Event::get_handler_arg() const noexcept {
+std::pair<Callback, CallbackArg> Event::get_handler_arg() const {
   // check the validity of the event
   assert(callback != nullptr);
 
