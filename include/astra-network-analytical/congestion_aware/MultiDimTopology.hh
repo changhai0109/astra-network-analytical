@@ -31,7 +31,7 @@ class MultiDimTopology : public Topology {
 
  private:
   /// number of dimensions
-  int dims_count;
+//   int dims_count;
 
   /// store pointer to the basic_topology[of which NPU][of which network dim].
   std::vector<std::vector<std::shared_ptr<BasicTopology>>> basic_topology_map;

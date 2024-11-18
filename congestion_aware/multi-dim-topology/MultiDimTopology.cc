@@ -20,7 +20,7 @@ MultiDimTopology::MultiDimTopology(
     std::vector<int>&& npus_count_per_dim,
     std::vector<Bandwidth>&& bandwidth_per_dim,
     std::vector<Latency>&& latency_per_dim) noexcept
-    : basic_topology_map(), dims_count(dims_count), Topology() {
+    : basic_topology_map(), Topology() {
   // assert value validity
   assert(dims_count > 0);
   assert(topology_per_dim.size() == dims_count);
