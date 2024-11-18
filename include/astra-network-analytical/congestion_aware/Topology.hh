@@ -9,6 +9,7 @@ LICENSE file in the root directory of this source tree.
 #include <vector>
 #include "common/EventQueue.hh"
 #include "congestion_aware/Chunk.hh"
+#include "congestion_aware/CostModel.hh"
 #include "congestion_aware/Device.hh"
 
 using namespace NetworkAnalytical;
@@ -20,6 +21,8 @@ namespace NetworkAnalyticalCongestionAware {
  */
 class Topology {
  public:
+  using DollarCost = CostModel::DollarCost;
+
   /**
    * Set the event queue to be used by the topology.
    *
@@ -46,6 +49,13 @@ class Topology {
    */
   [[nodiscard]] virtual Route route(DeviceId src, DeviceId dest)
       const noexcept = 0;
+
+  /**
+   * @brief Get the dollar cost of the topology
+   *
+   * @return DollarCost
+   */
+  [[nodiscard]] DollarCost get_topology_cost() const noexcept;
 
   /**
    * Initiate a transmission of a chunk.
@@ -137,12 +147,18 @@ class Topology {
    * @param latency latency of link
    * @param bidirectional true if connection is bidirectional, false otherwise
    */
-  static void connect(
+  void connect(
       const std::shared_ptr<Device>& src,
       const std::shared_ptr<Device>& dest,
       Bandwidth bandwidth,
       Latency latency,
       bool bidirectional = true) noexcept;
+
+  /// cost model
+  static CostModel cost_model;
+
+  /// cost of the topology
+  DollarCost topology_cost;
 
   /// number of total devices in the topology
   /// device includes non-NPU devices such as switches

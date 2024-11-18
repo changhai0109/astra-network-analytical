@@ -67,5 +67,10 @@ int main() {
   std::cout << "Simulation finished at time: " << finish_time << " ns"
             << std::endl;
 
+  // print network cost
+  const auto topology_cost = topology->get_topology_cost();
+  std::cout << "Network cost: " << topology_cost << std::endl;
+
+  // terminate
   return 0;
 }

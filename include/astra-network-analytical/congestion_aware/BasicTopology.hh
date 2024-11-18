@@ -7,6 +7,7 @@ LICENSE file in the root directory of this source tree.
 
 #include <optional>
 #include "common/Type.hh"
+#include "congestion_aware/CostModel.hh"
 #include "congestion_aware/Topology.hh"
 
 using namespace NetworkAnalytical;
@@ -63,6 +64,15 @@ class BasicTopology : public Topology {
    * @return type of the basic topology
    */
   [[nodiscard]] TopologyBuildingBlock get_basic_topology_type() const noexcept;
+
+  /**
+   * @brief Get the dollar cost of the basic topology, as a building block
+   *
+   * @return CostModel::DollarCost
+   */
+  [[nodiscard]] virtual CostModel::DollarCost get_topology_cost_block(
+      int current_dim,
+      int total_dim) const noexcept = 0;
 
  protected:
   /// bandwidth of each link

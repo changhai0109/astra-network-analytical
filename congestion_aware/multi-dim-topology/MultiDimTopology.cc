@@ -20,7 +20,7 @@ MultiDimTopology::MultiDimTopology(
     std::vector<int>&& npus_count_per_dim,
     std::vector<Bandwidth>&& bandwidth_per_dim,
     std::vector<Latency>&& latency_per_dim) noexcept
-    : basic_topology_map(), Topology() {
+    : basic_topology_map(), dims_count(dims_count), Topology() {
   // assert value validity
   assert(dims_count > 0);
   assert(topology_per_dim.size() == dims_count);
@@ -212,6 +212,11 @@ void MultiDimTopology::construct_dimension(
                     << "not supported basic-topology" << std::endl;
           std::exit(-1);
       }
+
+      // add the cost of the current building block
+      const auto building_block_cost =
+          basic_topology->get_topology_cost_block(dim + 1, dims_count);
+      topology_cost += building_block_cost;
 
       // assign this created basic topology to the map
       for (const auto& npu : basic_topology_npus) {

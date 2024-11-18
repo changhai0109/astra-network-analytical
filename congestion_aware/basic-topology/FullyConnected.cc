@@ -65,3 +65,19 @@ void FullyConnected::construct_connections() noexcept {
     }
   }
 }
+
+FullyConnected::DollarCost FullyConnected::get_topology_cost_block(
+    const int current_dim,
+    const int total_dim) const noexcept {
+  // get the cost of the link
+  auto link_cost = cost_model.get_link_cost(current_dim, total_dim);
+  assert(link_cost > 0);
+  link_cost *= bandwidth;
+
+  // total number of links in fullyconnected
+  const auto links_count = npus_count * (npus_count - 1);
+
+  // return the cost
+  const auto cost = link_cost * links_count;
+  return cost;
+}

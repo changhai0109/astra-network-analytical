@@ -5,6 +5,7 @@ LICENSE file in the root directory of this source tree.
 
 #include "congestion_aware/Topology.hh"
 #include <cassert>
+#include <iostream>
 #include "congestion_aware/Link.hh"
 
 using namespace NetworkAnalyticalCongestionAware;
@@ -17,8 +18,10 @@ void Topology::set_event_queue(
   Link::set_event_queue(std::move(event_queue));
 }
 
+CostModel Topology::cost_model = CostModel();
+
 Topology::Topology() noexcept
-    : npus_count(-1), devices_count(-1), dims_count(-1) {
+    : npus_count(-1), devices_count(-1), dims_count(-1), topology_cost(0) {
   npus_count_per_dim = {};
   devices = {};
   topology_per_dim = {};
@@ -105,6 +108,11 @@ void Topology::connect(
     const Bandwidth bandwidth,
     const Latency latency,
     const bool bidirectional) noexcept {
+  // calculate link cost
+  auto link_cost = cost_model.get_link_cost(1, 1); // as if total dim=1
+  assert(link_cost > 0);
+  link_cost *= bandwidth;
+
   // assert bandwidth and latency are valid
   assert(bandwidth > 0);
   assert(latency >= 0);
@@ -114,10 +122,12 @@ void Topology::connect(
 
   // connect src -> dest
   src->connect(dest_id, bandwidth, latency);
+  topology_cost += link_cost;
 
   // if bidirectional, connect dest -> src
   if (bidirectional) {
     dest->connect(src_id, bandwidth, latency);
+    topology_cost += link_cost;
   }
 }
 
@@ -135,4 +145,9 @@ std::shared_ptr<Device> Topology::create_device(const DeviceId id) noexcept {
 
   // return the pointer
   return new_device;
+}
+
+Topology::DollarCost Topology::get_topology_cost() const noexcept {
+  assert(topology_cost > 0);
+  return topology_cost;
 }

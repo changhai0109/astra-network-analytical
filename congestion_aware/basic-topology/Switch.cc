@@ -5,6 +5,7 @@ LICENSE file in the root directory of this source tree.
 
 #include "congestion_aware/Switch.hh"
 #include <cassert>
+#include <iostream>
 
 using namespace NetworkAnalyticalCongestionAware;
 
@@ -71,4 +72,42 @@ void Switch::construct_connections() noexcept {
     auto npu = devices[i];
     connect(devices[i], switch_device, bandwidth, latency, true);
   }
+
+  // add switch cost
+  const auto switch_cost = cost_model.get_switch_cost(1, 1);
+  assert(switch_cost > 0);
+  topology_cost += switch_cost * npus_count * bandwidth; // radix = #npus
+
+  // add nic cost, if nic is used
+  const auto nic_cost = cost_model.get_nic_cost(1, 1);
+  if (nic_cost > 0) { // nic is used
+    topology_cost += (nic_cost * npus_count * bandwidth); // #nics == #npus
+  }
+}
+
+Switch::DollarCost Switch::get_topology_cost_block(
+    const int current_dim,
+    const int total_dim) const noexcept {
+  DollarCost cost = 0.0;
+
+  // get the cost of the link
+  auto link_cost = cost_model.get_link_cost(current_dim, total_dim);
+  assert(link_cost > 0);
+  link_cost *= bandwidth;
+
+  const auto links_count = 2 * npus_count; // npus to switch, switch to npus
+  cost += (link_cost * links_count);
+
+  // add switch cost
+  const auto switch_cost = cost_model.get_switch_cost(current_dim, total_dim);
+  assert(switch_cost > 0);
+  cost += switch_cost * npus_count * bandwidth; // radix = #npus
+
+  // add nic cost, if nic is used
+  const auto nic_cost = cost_model.get_nic_cost(current_dim, total_dim);
+  if (nic_cost > 0) { // nic is used
+    cost += (nic_cost * npus_count * bandwidth); // #nics == #npus
+  }
+
+  return cost;
 }

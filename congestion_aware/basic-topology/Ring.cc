@@ -115,3 +115,24 @@ void Ring::construct_connections() noexcept {
   const auto dest = devices[0];
   connect(src, dest, bandwidth, latency, bidirectional);
 }
+
+Ring::DollarCost Ring::get_topology_cost_block(int current_dim, int total_dim)
+    const noexcept {
+  DollarCost cost = 0.0;
+
+  // get the cost of the link
+  auto link_cost = cost_model.get_link_cost(current_dim, total_dim);
+  assert(link_cost > 0);
+  link_cost *= bandwidth;
+  const auto unidirectional_link_cost = link_cost * npus_count;
+
+  cost += unidirectional_link_cost;
+  if (bidirectional) {
+    cost += unidirectional_link_cost;
+  }
+
+  // ring does not use nic or switch
+
+  // return the cost
+  return cost;
+}

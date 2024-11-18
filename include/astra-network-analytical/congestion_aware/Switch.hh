@@ -52,6 +52,13 @@ class Switch final : public BasicTopology {
   [[nodiscard]] Route route(DeviceId src, DeviceId dest)
       const noexcept override;
 
+  /**
+   * Implementation of the get_topology_cost in BasicTopology.
+   */
+  [[nodiscard]] Switch::DollarCost get_topology_cost_block(
+      int current_dim,
+      int total_dim) const noexcept override;
+
  protected:
   /**
    * Implementation of construct_connections in BasicTopology.
